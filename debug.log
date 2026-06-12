@@ -1,0 +1,41 @@
+
+> sio.co.id-dashboard@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.7 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.255.255.254:3000
+- Environments: .env.local, .env
+✓ Ready in 856ms
+
+ GET / 200 in 1001ms (next.js: 467ms, application-code: 534ms)
+○ Compiling /api/gsc ...
+⨯ Error: No access, refresh token, API key or refresh handler callback is set.
+    at GET (app/api/gsc/route.ts:18:43)
+  16 |   });
+  17 |
+> 18 |   const sites = await searchconsole.sites.list();
+     |                                           ^
+  19 |
+  20 |   return Response.json(sites.data);
+  21 | }
+ GET /api/gsc 500 in 23.1s (next.js: 20.9s, application-code: 2.2s)
+⨯ ReferenceError: NextAuth is not defined
+    at module evaluation (app/api/auth/[...nextauth]/route.ts:1:17)
+    at Object.<anonymous> (.next/dev/server/app/api/auth/[...nextauth]/route.js:6:3)
+> 1 | const handler = NextAuth({
+    |                 ^
+  2 |   providers: [
+  3 |     GoogleProvider({
+  4 |       clientId: process.env.GOOGLE_CLIENT_ID!, {
+  page: '/api/auth/session'
+}
+ GET /api/auth/session 500 in 1357ms (next.js: 791ms, application-code: 566ms)
+[browser] Uncaught ReferenceError: NextAuth is not defined
+    at module evaluation (app/api/auth/[...nextauth]/route.ts:1:17)
+    at Object.<anonymous> (.next/dev/server/app/api/auth/[...nextauth]/route.js:6:3)
+> 1 | const handler = NextAuth({
+    |                 ^
+  2 |   providers: [
+  3 |     GoogleProvider({
+  4 |       clientId: process.env.GOOGLE_CLIENT_ID!,
