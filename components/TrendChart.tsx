@@ -9,13 +9,14 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { date: "01", clicks: 100 },
-  { date: "02", clicks: 250 },
-  { date: "03", clicks: 180 },
-];
+interface Props {
+  data: {
+    date: string;
+    clicks: number;
+  }[];
+}
 
-export default function TrendChart() {
+export default function TrendChart({ data }: Props) {
   return (
     <div className="mt-8 rounded-xl border p-6">
       <h2 className="font-bold mb-4">
@@ -30,7 +31,10 @@ export default function TrendChart() {
           <XAxis dataKey="date" />
           <YAxis />
           <Tooltip />
-          <Line dataKey="clicks" />
+          <Line
+            type="monotone"
+            dataKey="clicks"
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>

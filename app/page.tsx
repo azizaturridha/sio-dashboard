@@ -1,6 +1,72 @@
 import MetricCard from "@/components/MetricCard";
+import TrendChart from "@/components/TrendChart";
+import TopKeywords from "@/components/TopKeywords";
+import TopPages from "@/components/TopPages";
+import { readCsv } from "@/lib/gsc";
 
-export default function Home() {
+export default async function Home() {
+  const chartData = await readCsv("Chart.csv");
+  const keywordsData = await readCsv("Queries.csv");
+  const pagesData = await readCsv("Pages.csv");
+
+  const totalClicks = chartData.reduce(
+    (sum: number, row: any) =>
+      sum + Number(row["Clicks"] || 0),
+    0
+  );
+
+  const totalImpressions = chartData.reduce(
+    (sum: number, row: any) =>
+      sum + Number(row["Impressions"] || 0),
+    0
+  );
+
+  const avgCtr =
+    chartData.reduce(
+      (sum: number, row: any) =>
+        sum +
+        Number(
+          String(row["CTR"] || "0")
+            .replace("%", "")
+        ),
+      0
+    ) / chartData.length;
+
+  const avgPosition =
+    chartData.reduce(
+      (sum: number, row: any) =>
+        sum +
+        Number(row["Position"] || 0),
+      0
+    ) / chartData.length;
+
+  const trendData = chartData.map(
+    (row: any) => ({
+      date: row["Date"],
+      clicks: Number(
+        row["Clicks"] || 0
+      ),
+    })
+  );
+
+  const topKeywords = keywordsData
+    .slice(0, 20)
+    .map((row: any) => ({
+      keyword: row["Top queries"],
+      clicks: Number(
+        row["Web Clicks"] || 0
+      ),
+    }));
+
+  const topPages = pagesData
+    .slice(0, 20)
+    .map((row: any) => ({
+      page: row["Top pages"],
+      clicks: Number(
+        row["Web Clicks"] || 0
+      ),
+    }));
+
   return (
     <main className="p-8">
       <h1 className="text-4xl font-bold mb-8">
@@ -10,22 +76,34 @@ export default function Home() {
       <div className="grid grid-cols-4 gap-4">
         <MetricCard
           title="Clicks"
-          value="194.114"
+          value={totalClicks.toLocaleString("id-ID")}
         />
 
         <MetricCard
           title="Impressions"
-          value="7.567.099"
-        />
+	  value={totalImpressions.toLocaleString("id-ID")}
+	/>
 
         <MetricCard
           title="CTR"
-          value="2.57%"
+          value={`${avgCtr.toFixed(2)}%`}
         />
 
         <MetricCard
           title="Position"
-          value="6.8"
+          value={avgPosition.toFixed(2)}
+        />
+      </div>
+
+      <TrendChart data={trendData} />
+
+      <div className="grid grid-cols-2 gap-4 mt-8">
+        <TopKeywords
+          data={topKeywords}
+        />
+
+        <TopPages
+          data={topPages}
         />
       </div>
     </main>
