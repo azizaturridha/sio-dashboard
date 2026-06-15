@@ -2,6 +2,7 @@ import MetricCard from "@/components/MetricCard";
 import TrendChart from "@/components/TrendChart";
 import TopKeywords from "@/components/TopKeywords";
 import TopPages from "@/components/TopPages";
+import KeywordSearch from "@/components/KeywordSearch";
 import { readCsv } from "@/lib/gsc";
 
 export default async function Home() {
@@ -67,13 +68,19 @@ export default async function Home() {
       ),
     }));
 
+ const totalKeywords =
+   keywordsData.length;
+
+ const totalPages =
+   pagesData.length;
+
   return (
     <main className="p-8">
       <h1 className="text-4xl font-bold mb-8">
         SIO.CO.ID Dashboard
       </h1>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-6 gap-4">
         <MetricCard
           title="Clicks"
           value={totalClicks.toLocaleString("id-ID")}
@@ -93,19 +100,28 @@ export default async function Home() {
           title="Position"
           value={avgPosition.toFixed(2)}
         />
+
+        <MetricCard
+          title="Keywords"
+          value={totalKeywords.toLocaleString("id-ID")}
+        />
+
+        <MetricCard
+          title="Pages"
+          value={totalPages.toLocaleString("id-ID")}
+        />
       </div>
 
       <TrendChart data={trendData} />
 
       <div className="grid grid-cols-2 gap-4 mt-8">
-        <TopKeywords
+        <TopKeywords data={topKeywords}/>
+        <TopPages data={topPages}/>
+      </div>
+
+        <KeywordSearch
           data={topKeywords}
         />
-
-        <TopPages
-          data={topPages}
-        />
-      </div>
     </main>
   );
 }
