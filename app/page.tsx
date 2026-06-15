@@ -3,6 +3,7 @@ import TrendChart from "@/components/TrendChart";
 import TopKeywords from "@/components/TopKeywords";
 import TopPages from "@/components/TopPages";
 import KeywordSearch from "@/components/KeywordSearch";
+import TopCtrKeywords from "@/components/TopCtrKeywords";
 import { readCsv } from "@/lib/gsc";
 
 export default async function Home() {
@@ -74,6 +75,48 @@ export default async function Home() {
  const totalPages =
    pagesData.length;
 
+const topCtrKeywords = keywordsData
+  .map((row: any) => ({
+    keyword: row["Top queries"],
+    ctr: row["Web CTR"],
+    ctrValue: Number(
+      String(row["Web CTR"] || "0")
+        .replace("%", "")
+    ),
+  }))
+  .sort(
+    (a: any, b: any) =>
+      b.ctrValue - a.ctrValue
+  )
+  .slice(0, 20);
+
+const opportunityKeywords = keywordsData
+  .map((row: any) => ({
+    keyword: row["Top queries"],
+    position: Number(
+      row["Web Position"] || 0
+    ),
+    ctr: row["Web CTR"],
+    ctrValue: Number(
+      String(row["Web CTR"] || "0")
+        .replace("%", "")
+    ),
+    impressions: Number(
+      row["Web Impressions"] || 0
+    ),
+  }))
+  .filter(
+    (row: any) =>
+      row.position >= 5 &&
+      row.position <= 15 &&
+      row.impressions > 50 &&
+      row.ctrValue < 3
+  )
+  .sort(
+    (a: any, b: any) =>
+      b.impressions - a.impressions
+  )
+  .slice(0, 20);
   return (
     <main className="p-8">
       <h1 className="text-4xl font-bold mb-8">
@@ -118,6 +161,12 @@ export default async function Home() {
         <TopKeywords data={topKeywords}/>
         <TopPages data={topPages}/>
       </div>
+
+<div className="mt-8">
+  <TopCtrKeywords
+    data={topCtrKeywords}
+  />
+</div>
 
         <KeywordSearch
           data={topKeywords}
