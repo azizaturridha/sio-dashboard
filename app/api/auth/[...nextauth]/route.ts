@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
-const handler = NextAuth({
+export const authOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -13,6 +13,7 @@ const handler = NextAuth({
             "email",
             "profile",
             "https://www.googleapis.com/auth/webmasters.readonly",
+            "https://www.googleapis.com/auth/analytics.readonly",
           ].join(" "),
           access_type: "offline",
           prompt: "consent",
@@ -23,39 +24,31 @@ const handler = NextAuth({
 
   callbacks: {
     async jwt({ token, account }) {
-
-      console.log("=================================");
-      console.log("JWT CALLBACK");
-      console.log("ACCOUNT =", account);
-      console.log("TOKEN BEFORE =", token);
-
       if (account) {
-        (token as any).accessToken = account.access_token;
-      }
+        (token as any).accessToken =
+          account.access_token;
 
-      console.log("TOKEN AFTER =", token);
-      console.log("=================================");
+        (token as any).refreshToken =
+          account.refresh_token;
+      }
 
       return token;
     },
 
     async session({ session, token }) {
-
-      console.log("=================================");
-      console.log("SESSION CALLBACK");
-      console.log("TOKEN =", token);
-
       (session as any).accessToken =
         (token as any).accessToken;
 
-      console.log("SESSION =", session);
-      console.log("=================================");
+      (session as any).refreshToken =
+        (token as any).refreshToken;
 
       return session;
     },
   },
 
   secret: process.env.NEXTAUTH_SECRET,
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
