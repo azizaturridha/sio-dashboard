@@ -23,28 +23,28 @@ export const authOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, account }) {
-      if (account) {
-        (token as any).accessToken =
-          account.access_token;
+  async jwt({ token, account }: any) {
+    if (account) {
+      (token as any).accessToken =
+        account.access_token;
 
-        (token as any).refreshToken =
-          account.refresh_token;
-      }
+      (token as any).refreshToken =
+        account.refresh_token;
+    }
 
-      return token;
-    },
-
-    async session({ session, token }) {
-      (session as any).accessToken =
-        (token as any).accessToken;
-
-      (session as any).refreshToken =
-        (token as any).refreshToken;
-
-      return session;
-    },
+    return token;
   },
+
+  async session({ session, token }: any) {
+    (session as any).accessToken =
+      (token as any).accessToken;
+
+    (session as any).refreshToken =
+      (token as any).refreshToken;
+
+    return session;
+  },
+},
 
   secret: process.env.NEXTAUTH_SECRET,
 };
