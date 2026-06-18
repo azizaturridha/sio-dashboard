@@ -4,6 +4,11 @@ import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
+console.log("SESSION =", session);
+console.log(
+  "ACCESS TOKEN =",
+  (session as any)?.accessToken
+);
 
   if (!(session as any)?.accessToken) {
     return Response.json(
@@ -17,6 +22,13 @@ export async function GET() {
   oauth2Client.setCredentials({
     access_token: (session as any).accessToken,
   });
+
+const tokenInfo =
+  await oauth2Client.getTokenInfo(
+    (session as any).accessToken
+  );
+
+console.log(tokenInfo);
 
   const searchconsole = google.searchconsole({
     version: "v1",

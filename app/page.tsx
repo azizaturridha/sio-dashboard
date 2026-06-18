@@ -4,6 +4,8 @@ import TopKeywords from "@/components/TopKeywords";
 import TopPages from "@/components/TopPages";
 import KeywordSearch from "@/components/KeywordSearch";
 import TopCtrKeywords from "@/components/TopCtrKeywords";
+import OpportunityKeywords from "@/components/OpportunityKeywords";
+import LiveMetrics from "@/components/LiveMetrics";
 import { readCsv } from "@/lib/gsc";
 
 export default async function Home() {
@@ -123,37 +125,21 @@ const opportunityKeywords = keywordsData
         SIO.CO.ID Dashboard
       </h1>
 
-      <div className="grid grid-cols-6 gap-4">
-        <MetricCard
-          title="Clicks"
-          value={totalClicks.toLocaleString("id-ID")}
-        />
+      <div className="space-y-4">
+  <LiveMetrics />
 
-        <MetricCard
-          title="Impressions"
-	  value={totalImpressions.toLocaleString("id-ID")}
-	/>
+  <div className="grid grid-cols-2 gap-4">
+    <MetricCard
+      title="Keywords"
+      value={totalKeywords.toLocaleString("id-ID")}
+    />
 
-        <MetricCard
-          title="CTR"
-          value={`${avgCtr.toFixed(2)}%`}
-        />
-
-        <MetricCard
-          title="Position"
-          value={avgPosition.toFixed(2)}
-        />
-
-        <MetricCard
-          title="Keywords"
-          value={totalKeywords.toLocaleString("id-ID")}
-        />
-
-        <MetricCard
-          title="Pages"
-          value={totalPages.toLocaleString("id-ID")}
-        />
-      </div>
+    <MetricCard
+      title="Pages"
+      value={totalPages.toLocaleString("id-ID")}
+    />
+  </div>
+</div>
 
       <TrendChart data={trendData} />
 
@@ -168,9 +154,16 @@ const opportunityKeywords = keywordsData
   />
 </div>
 
-        <KeywordSearch
+<div className="mt-8">
+  <OpportunityKeywords
+    data={opportunityKeywords}
+  />
+</div>
+      
+  <KeywordSearch
           data={topKeywords}
         />
     </main>
   );
 }
+
